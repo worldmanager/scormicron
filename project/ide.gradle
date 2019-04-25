@@ -1,0 +1,25 @@
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+idea {
+    project {
+        jdkName = JavaVersion.VERSION_1_8
+        languageLevel = JavaVersion.VERSION_1_8
+        ipr {
+            withXml {
+                it.node.component.find { it.@name == 'VcsDirectoryMappings' }.mapping.@vcs = 'Git'
+            }
+        }
+    }
+
+    /*
+    module {
+        inheritOutputDirs = false
+        outputDir = sourceSets.main.output.classesDir
+        testOutputDir = sourceSets.test.output.classesDir
+    }
+    */
+}
+
+// help IDEA to highlight the classes
+//sourceSets.main.java.srcDirs += 'build/generated/java'

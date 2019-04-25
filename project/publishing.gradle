@@ -1,0 +1,120 @@
+apply plugin: 'signing'
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+
+/**
+ * Create POM config and return for use by other tasks.
+ */
+def getPomConfiguration() {
+    def repo = sprintf('%s/%s', project.ext.get('scm.username'), project.ext.get('scm.repo.name'))
+
+    return {
+        name project.name
+        version wm.utils.composeVersion()
+        description project.description
+        url sprintf(project.ext.get('scm.repo.url'), repo)
+        inceptionYear '2017'
+        packaging 'jar'
+        licenses {
+            license {
+                name project.ext.get('license.name')
+                url project.ext.get('license.url')
+                distribution 'repo'
+            }
+        }
+        scm {
+            url sprintf(project.ext.get('scm.repo.url'), repo)
+            connection 'scm:git:' + sprintf(project.ext.get('scm.remote.url.fetch'), repo)
+            developerConnection 'scm:git:' + sprintf(project.ext.get('scm.remote.url.push'), repo)
+        }
+        developers {
+            developer {
+                id 'worldmanager'
+                name 'World Manager'
+                email 'support@worldmanager.com'
+            }
+        }
+        organization {
+            name 'World Manager'
+        }
+    }
+}
+
+artifacts {
+    archives jar
+    archives sourceJar
+    archives javadocJar
+}
+
+publishing {
+    publications {
+        main(MavenPublication) {
+            from components.java
+
+            artifact source: sourceJar,  classifier: 'sources'
+            artifact source: javadocJar, classifier: 'javadoc'
+
+            pom.withXml {
+                asNode().children().last() + getPomConfiguration()
+            }
+        }
+    }
+    repositories {
+        // mavenLocal()
+        if (project.ext.has('publish.repos.releases.url')) {
+            maven {
+                url wm.utils.isSnapshot() ? project.ext.get('publish.repos.snapshots.url') : project.ext.get('publish.repos.releases.url')
+                credentials {
+                    username project.ext.get('publish.credentials.username')
+                    password project.ext.get('publish.credentials.password')
+                }
+            }
+        }
+    }
+}
+
+signing {
+    sign configurations.archives
+    required { !wm.utils.isSnapshot() && gradle.taskGraph.hasTask("publish") }
+}
+
+uploadArchives {
+    repositories.mavenDeployer {
+        if (project.ext.has('publish.repos.releases.url')) {
+            def repoUrl = wm.utils.isSnapshot() ? project.ext.get('publish.repos.snapshots.url') : project.ext.get('publish.repos.releases.url')
+
+            repository(url: repoUrl) {
+                authentication(
+                    userName: project.ext.get('publish.credentials.username'),
+                    password: project.ext.get('publish.credentials.password')
+                )
+            }
+        }
+        pom.project getPomConfiguration()
+        beforeDeployment { signing.signPom it }
+    }
+}
+
+install.repositories.mavenInstaller {
+    pom.project getPomConfiguration()
+}
+
+task pom {
+    doLast {
+        pom {
+            project getPomConfiguration()
+        }.writeTo(mavenPomDir.toString() + '/pom.xml')
+    }
+}
+
+task upload {
+    group 'Publishing'
+    dependsOn uploadArchives
+}
+
+task release {
+    group 'Publishing'
+    dependsOn ':tagVersion', uploadArchives /*, publish */
+}
+
+tasks.publish.mustRunAfter ':tagVersion'
