@@ -1,6 +1,6 @@
 package com.worldmanager.scormicron
 
-import com.worldmanager.scormicron.manifest.v121.ManifestType
+import com.worldmanager.scormicron.manifest.v112.ManifestType
 
 class ManifestParserSpec extends BaseSpec {
 

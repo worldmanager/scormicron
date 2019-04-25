@@ -1,4 +1,4 @@
-package com.worldmanager.scormicron.validators
+package com.worldmanager.scormicron
 
 import scala.collection.mutable.ArrayBuffer
 
