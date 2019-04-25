@@ -17,7 +17,8 @@ object ManifestParser {
         }
         try {
             val zipFile = new ZipFile(scormZip)
-            val directory = Files.createTempDirectory(Paths.get(scormZip.getParent), scormZip.getName + System.nanoTime.toString)
+            val tmpPath = Paths.get(System.getProperty("java.io.tmpdir"))
+            val directory = Files.createTempDirectory(tmpPath, scormZip.getName + System.nanoTime.toString)
             directory.toFile.deleteOnExit()
             zipFile.extractAll(directory.toString)
             directory.resolve(ManifestFileName).toFile
