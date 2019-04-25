@@ -1,0 +1,521 @@
+<?xml version="1.0"?>
+<!-- filename=adlcp_rootv1p2.xsd -->
+<!-- Conforms to w3c http://www.w3.org/TR/xmlschema-1/ 2000-10-24-->
+
+<xsd:schema xmlns="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+            targetNamespace="http://www.adlnet.org/xsd/adlcp_rootv1p2"
+            xmlns:xml="http://www.w3.org/XML/1998/namespace"
+            xmlns:imscp="http://www.imsproject.org/xsd/imscp_rootv1p1p2"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            elementFormDefault="unqualified"
+            version="ADL Version 1.2">
+
+<!--    <xsd:import namespace="http://www.imsproject.org/xsd/imscp_rootv1p1p2"-->
+<!--                schemaLocation="imscp_rootv1p1p2.xsd" />-->
+
+<!--    <xsd:element name="location" type="locationType" />-->
+<!--    <xsd:element name="prerequisites" type="prerequisitesType" />-->
+<!--    <xsd:element name="maxtimeallowed" type="maxtimeallowedType" />-->
+<!--    <xsd:element name="timelimitaction" type="timelimitactionType" />-->
+<!--    <xsd:element name="datafromlms" type="datafromlmsType" />-->
+<!--    <xsd:element name="masteryscore" type="masteryscoreType" />-->
+
+
+<!--    <xsd:element name="schema" type="newSchemaType" />-->
+<!--    <xsd:simpleType name="newSchemaType">-->
+<!--        <xsd:restriction base="imscp:schemaType">-->
+<!--            <xsd:enumeration value="ADL SCORM" />-->
+<!--        </xsd:restriction>-->
+<!--    </xsd:simpleType>-->
+
+<!--    <xsd:element name="schemaversion" type="newSchemaversionType" />-->
+<!--    <xsd:simpleType name="newSchemaversionType">-->
+<!--        <xsd:restriction base="imscp:schemaversionType">-->
+<!--            <xsd:enumeration value="1.2" />-->
+<!--        </xsd:restriction>-->
+<!--    </xsd:simpleType>-->
+
+
+<!--    <xsd:attribute name="scormtype">-->
+<!--        <xsd:simpleType>-->
+<!--            <xsd:restriction base="xsd:string">-->
+<!--                <xsd:enumeration value="asset" />-->
+<!--                <xsd:enumeration value="sco" />-->
+<!--            </xsd:restriction>-->
+<!--        </xsd:simpleType>-->
+<!--    </xsd:attribute>-->
+
+<!--    <xsd:simpleType name="locationType">-->
+<!--        <xsd:restriction base="xsd:string">-->
+<!--            <xsd:maxLength value="2000" />-->
+<!--        </xsd:restriction>-->
+<!--    </xsd:simpleType>-->
+
+
+<!--    <xsd:complexType name="prerequisitesType">-->
+<!--        <xsd:simpleContent>-->
+<!--            <xsd:extension base="prerequisiteStringType">-->
+<!--                <xsd:attributeGroup ref="attr.prerequisitetype" />-->
+<!--            </xsd:extension>-->
+<!--        </xsd:simpleContent>-->
+<!--    </xsd:complexType>-->
+
+<!--    <xsd:attributeGroup name="attr.prerequisitetype">-->
+<!--        <xsd:attribute name="type" use="required">-->
+<!--            <xsd:simpleType>-->
+<!--                <xsd:restriction base="xsd:string">-->
+<!--                    <xsd:enumeration value="aicc_script" />-->
+<!--                </xsd:restriction>-->
+<!--            </xsd:simpleType>-->
+<!--        </xsd:attribute>-->
+<!--    </xsd:attributeGroup>-->
+
+<!--    <xsd:simpleType name="maxtimeallowedType">-->
+<!--        <xsd:restriction base="xsd:string">-->
+<!--            <xsd:maxLength value="13" />-->
+<!--        </xsd:restriction>-->
+<!--    </xsd:simpleType>-->
+
+<!--    <xsd:simpleType name="timelimitactionType">-->
+<!--        <xsd:restriction base="stringType">-->
+<!--            <xsd:enumeration value="exit,no message" />-->
+<!--            <xsd:enumeration value="exit,message" />-->
+<!--            <xsd:enumeration value="continue,no message" />-->
+<!--            <xsd:enumeration value="continue,message" />-->
+<!--        </xsd:restriction>-->
+<!--    </xsd:simpleType>-->
+
+<!--    <xsd:simpleType name="datafromlmsType">-->
+<!--        <xsd:restriction base="xsd:string">-->
+<!--            <xsd:maxLength value="255" />-->
+<!--        </xsd:restriction>-->
+<!--    </xsd:simpleType>-->
+
+<!--    <xsd:simpleType name="masteryscoreType">-->
+<!--        <xsd:restriction base="xsd:string">-->
+<!--            <xsd:maxLength value="200" />-->
+<!--        </xsd:restriction>-->
+<!--    </xsd:simpleType>-->
+
+<!--    <xsd:simpleType name="stringType">-->
+<!--        <xsd:restriction base="xsd:string" />-->
+<!--    </xsd:simpleType>-->
+
+<!--    <xsd:simpleType name="prerequisiteStringType">-->
+<!--        <xsd:restriction base="xsd:string">-->
+<!--            <xsd:maxLength value="200" />-->
+<!--        </xsd:restriction>-->
+<!--    </xsd:simpleType>-->
+
+
+    <!-- ********************************** -->
+    <xsd:annotation>
+        <xsd:documentation>Inclusions and Imports</xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="ims_xml.xsd"/>
+
+    <xsd:annotation>
+        <xsd:documentation>Attribute Declarations</xsd:documentation>
+    </xsd:annotation>
+
+    <!-- **************************** -->
+    <!-- ** Attribute Declarations ** -->
+    <!-- **************************** -->
+    <xsd:attributeGroup name="attr.base">
+        <xsd:attribute ref="xml:base" use="optional"/>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.default">
+        <xsd:attribute name="default" type="xsd:IDREF" use="optional"/>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.href">
+        <xsd:attribute name="href" use="optional">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:anyURI">
+                    <xsd:maxLength value="2000"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.href.req">
+        <xsd:attribute name="href" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:anyURI">
+                    <xsd:maxLength value="2000"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.identifier.req">
+        <xsd:attribute name="identifier" type="xsd:ID" use="required"/>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.identifier">
+        <xsd:attribute name="identifier" type="xsd:ID" use="optional"/>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.isvisible">
+        <xsd:attribute name="isvisible" type="xsd:boolean" use="optional"/>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.parameters">
+        <xsd:attribute name="parameters" use="optional">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="1000"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.identifierref">
+        <xsd:attribute name="identifierref" use="optional">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="2000"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.identifierref.req">
+        <xsd:attribute name="identifierref" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="2000"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.resourcetype.req">
+        <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="1000"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.structure.req">
+        <xsd:attribute name="structure" use="optional" default="hierarchical">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="200"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:attributeGroup name="attr.version">
+        <xsd:attribute name="version" use="optional">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:maxLength value="20"/>
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:annotation>
+        <xsd:documentation>element groups</xsd:documentation>
+    </xsd:annotation>
+
+    <xsd:group name="grp.any">
+        <xsd:annotation>
+            <xsd:documentation>Any namespaced element from any namespace may be included within an &quot;any&quot; element.  The namespace for the imported element must be defined in the instance, and the schema must be imported.  </xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:any namespace="##other" processContents="strict" minOccurs="0" maxOccurs="unbounded"/>
+        </xsd:sequence>
+    </xsd:group>
+
+    <!-- ************************** -->
+    <!-- ** Element Declarations ** -->
+    <!-- ************************** -->
+
+    <xsd:element name="dependency" type="dependencyType"/>
+    <xsd:element name="file" type="fileType"/>
+    <xsd:element name="item" type="itemType"/>
+    <xsd:element name="manifest" type="manifestType"/>
+    <xsd:element name="metadata" type="metadataType"/>
+    <xsd:element name="organization" type="organizationType"/>
+    <xsd:element name="organizations" type="organizationsType"/>
+    <xsd:element name="resource" type="resourceType"/>
+    <xsd:element name="resources" type="resourcesType"/>
+    <xsd:element name="schema" type="schemaType"/>
+    <xsd:element name="schemaversion" type="schemaversionType"/>
+    <xsd:element name="title" type="titleType"/>
+
+    <xsd:element name="location" type="locationType" />
+    <xsd:element name="prerequisites" type="prerequisitesType" />
+    <xsd:element name="maxtimeallowed" type="maxtimeallowedType" />
+    <xsd:element name="timelimitaction" type="timelimitactionType" />
+    <xsd:element name="datafromlms" type="datafromlmsType" />
+    <xsd:element name="masteryscore" type="masteryscoreType" />
+
+
+    <!-- ******************* -->
+    <!-- ** Complex Types ** -->
+    <!-- ******************* -->
+
+    <!-- **************** -->
+    <!-- ** dependency ** -->
+    <!-- **************** -->
+    <xsd:complexType name="dependencyType">
+        <xsd:sequence>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="attr.identifierref.req"/>
+        <xsd:anyAttribute namespace="##other" processContents="strict"/>
+    </xsd:complexType>
+
+    <!-- ********** -->
+    <!-- ** file ** -->
+    <!-- ********** -->
+    <xsd:complexType name="fileType">
+        <xsd:sequence>
+            <xsd:element ref="metadata" minOccurs="0"/>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="attr.href.req"/>
+        <xsd:anyAttribute namespace="##other" processContents="strict"/>
+    </xsd:complexType>
+
+    <!-- ********** -->
+    <!-- ** item ** -->
+    <!-- ********** -->
+    <xsd:complexType name="itemType">
+        <xsd:sequence>
+            <xsd:element ref="title" minOccurs="0"/>
+            <xsd:element ref="item" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="metadata" minOccurs="0"/>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="attr.identifier.req"/>
+        <xsd:attributeGroup ref="attr.identifierref"/>
+        <xsd:attributeGroup ref="attr.isvisible"/>
+        <xsd:attributeGroup ref="attr.parameters"/>
+        <xsd:anyAttribute namespace="##other" processContents="strict"/>
+    </xsd:complexType>
+
+    <!-- ************** -->
+    <!-- ** manifest ** -->
+    <!-- ************** -->
+    <xsd:complexType name="manifestType">
+        <xsd:sequence>
+            <xsd:element ref="metadata" minOccurs="0"/>
+            <xsd:element ref="organizations"/>
+            <xsd:element ref="resources"/>
+            <xsd:element ref="manifest" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="attr.identifier.req"/>
+        <xsd:attributeGroup ref="attr.version"/>
+        <xsd:attribute ref="xml:base"/>
+        <xsd:anyAttribute namespace="##other" processContents="strict"/>
+    </xsd:complexType>
+
+    <!-- ************** -->
+    <!-- ** metadata ** -->
+    <!-- ************** -->
+    <xsd:complexType name="metadataType">
+        <xsd:sequence>
+            <xsd:element ref="schema" minOccurs="0"/>
+            <xsd:element ref="schemaversion" minOccurs="0"/>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <!-- ******************* -->
+    <!-- ** organizations ** -->
+    <!-- ******************* -->
+    <xsd:complexType name="organizationsType">
+        <xsd:sequence>
+            <xsd:element ref="organization" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="attr.default"/>
+        <xsd:anyAttribute namespace="##other" processContents="strict"/>
+    </xsd:complexType>
+
+    <!-- ****************** -->
+    <!-- ** organization ** -->
+    <!-- ****************** -->
+    <xsd:complexType name="organizationType">
+        <xsd:sequence>
+            <xsd:element ref="title" minOccurs="0"/>
+            <xsd:element ref="item" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="metadata" minOccurs="0"/>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="attr.identifier.req"/>
+        <xsd:attributeGroup ref="attr.structure.req"/>
+        <xsd:anyAttribute namespace="##other" processContents="strict"/>
+    </xsd:complexType>
+
+    <!-- *************** -->
+    <!-- ** resources ** -->
+    <!-- *************** -->
+    <xsd:complexType name="resourcesType">
+        <xsd:sequence>
+            <xsd:element ref="resource" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="attr.base"/>
+        <xsd:anyAttribute namespace="##other" processContents="strict"/>
+    </xsd:complexType>
+
+    <!-- ************** -->
+    <!-- ** resource ** -->
+    <!-- ************** -->
+    <xsd:complexType name="resourceType">
+        <xsd:sequence>
+            <xsd:element ref="metadata" minOccurs="0"/>
+            <xsd:element ref="file" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:element ref="dependency" minOccurs="0" maxOccurs="unbounded"/>
+            <xsd:group ref="grp.any"/>
+        </xsd:sequence>
+        <xsd:attributeGroup ref="attr.identifier.req"/>
+        <xsd:attributeGroup ref="attr.resourcetype.req"/>
+        <xsd:attributeGroup ref="attr.base"/>
+        <xsd:attributeGroup ref="attr.href"/>
+        <xsd:anyAttribute namespace="##other" processContents="strict"/>
+    </xsd:complexType>
+
+    <!-- ****************** -->
+    <!-- ** Simple Types ** -->
+    <!-- ****************** -->
+
+    <!-- ************ -->
+    <!-- ** schema ** -->
+    <!-- ************ -->
+    <!--    <xsd:simpleType name="schemaType">-->
+    <!--        <xsd:restriction base="xsd:string">-->
+    <!--            <xsd:maxLength value="100"/>-->
+    <!--        </xsd:restriction>-->
+    <!--    </xsd:simpleType>-->
+
+    <!--    <xsd:simpleType name="newSchemaType">-->
+    <!--        <xsd:restriction base="imscp:schemaType">-->
+    <!--            <xsd:enumeration value="ADL SCORM" />-->
+    <!--        </xsd:restriction>-->
+    <!--    </xsd:simpleType>-->
+
+    <xsd:simpleType name="schemaType">
+        <xsd:restriction base="xsd:string">
+            <!--            <xsd:maxLength value="100"/>-->
+            <xsd:enumeration value="ADL SCORM" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <!-- ******************* -->
+    <!-- ** schemaversion ** -->
+    <!-- ******************* -->
+    <!--    <xsd:simpleType name="schemaversionType">-->
+    <!--        <xsd:restriction base="xsd:string">-->
+    <!--            <xsd:maxLength value="20"/>-->
+    <!--        </xsd:restriction>-->
+    <!--    </xsd:simpleType>-->
+    <!--    <xsd:simpleType name="newSchemaversionType">-->
+    <!--        <xsd:restriction base="imscp:schemaversionType">-->
+    <!--            <xsd:enumeration value="1.2" />-->
+    <!--        </xsd:restriction>-->
+    <!--    </xsd:simpleType>-->
+
+    <xsd:simpleType name="schemaversionType">
+        <xsd:restriction base="xsd:string">
+            <!--            <xsd:maxLength value="20"/>-->
+            <xsd:enumeration value="1.2" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <!-- *********** -->
+    <!-- ** title ** -->
+    <!-- *********** -->
+    <xsd:simpleType name="titleType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="200"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:attribute name="scormtype">
+        <xsd:simpleType>
+            <xsd:restriction base="xsd:string">
+                <xsd:enumeration value="asset" />
+                <xsd:enumeration value="sco" />
+            </xsd:restriction>
+        </xsd:simpleType>
+    </xsd:attribute>
+
+    <xsd:simpleType name="locationType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="2000" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+
+    <xsd:complexType name="prerequisitesType">
+        <xsd:simpleContent>
+            <xsd:extension base="prerequisiteStringType">
+                <xsd:attributeGroup ref="attr.prerequisitetype" />
+            </xsd:extension>
+        </xsd:simpleContent>
+    </xsd:complexType>
+
+    <xsd:attributeGroup name="attr.prerequisitetype">
+        <xsd:attribute name="type" use="required">
+            <xsd:simpleType>
+                <xsd:restriction base="xsd:string">
+                    <xsd:enumeration value="aicc_script" />
+                </xsd:restriction>
+            </xsd:simpleType>
+        </xsd:attribute>
+    </xsd:attributeGroup>
+
+    <xsd:simpleType name="maxtimeallowedType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="13" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="timelimitactionType">
+        <xsd:restriction base="stringType">
+            <xsd:enumeration value="exit,no message" />
+            <xsd:enumeration value="exit,message" />
+            <xsd:enumeration value="continue,no message" />
+            <xsd:enumeration value="continue,message" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="datafromlmsType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="255" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="masteryscoreType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="200" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+    <xsd:simpleType name="stringType">
+        <xsd:restriction base="xsd:string" />
+    </xsd:simpleType>
+
+    <xsd:simpleType name="prerequisiteStringType">
+        <xsd:restriction base="xsd:string">
+            <xsd:maxLength value="200" />
+        </xsd:restriction>
+    </xsd:simpleType>
+
+</xsd:schema>
+
