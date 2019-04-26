@@ -1,18 +1,16 @@
 package com.worldmanager.scormicron
 
-import com.worldmanager.scormicron.manifest.v112.ManifestType
-
 class ManifestParserSpec extends BaseSpec {
 
     import TestResources._
 
-    describe(classOf[ManifestParser].getCanonicalName) {
+    describe(classOf[ScormPackageParser].getCanonicalName) {
         describe("parse") {
             describe("Given valid manifest") {
                 validManifest.foreach { manifest =>
-                    it("should parse valid %s to %s".format(manifest, classOf[ManifestType].getName)) {
+                    it("should parse valid %s to %s".format(manifest, classOf[ScormPackageParser].getName)) {
                         try {
-                            val factory = new ManifestParser(manifest)
+                            val factory = new ScormPackageParser(manifest)
                             val manifestType = factory.parse
 
                             manifestType shouldNot be(null)
@@ -32,7 +30,7 @@ class ManifestParserSpec extends BaseSpec {
                 validZips.foreach { zip =>
                     it("should extract %s from %s".format(ManifestFileName, zip.getName)) {
                         try {
-                            val manifestFile = ManifestParser.extractManifestFromScormZip(zip)
+                            val manifestFile = ScormPackageParser.extractManifestFromScormZip(zip)
 
                             manifestFile shouldNot be(null)
                         }
