@@ -7,13 +7,13 @@ class ManifestParserSpec extends BaseSpec {
     describe(classOf[ScormPackageParser].getCanonicalName) {
         describe("parse") {
             describe("Given valid manifest") {
-                validManifest.foreach { manifest =>
+                validManifests.foreach { manifest =>
                     it("should parse valid %s to %s".format(manifest, classOf[ScormPackageParser].getName)) {
                         try {
                             val factory = new ScormPackageParser(manifest)
                             val manifestType = factory.parse
 
-                            manifestType shouldNot be(null)
+                            manifestType should not be null
                         }
                         catch {
                             case ex: ParseException =>
@@ -32,7 +32,7 @@ class ManifestParserSpec extends BaseSpec {
                         try {
                             val manifestFile = ScormPackageParser.extractManifestFromScormZip(zip)
 
-                            manifestFile shouldNot be(null)
+                            manifestFile should not be null
                         }
                         catch {
                             case ex: ParseException =>

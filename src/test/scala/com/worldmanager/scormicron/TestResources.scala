@@ -1,30 +1,24 @@
 package com.worldmanager.scormicron
 
-import java.io.{File, FilenameFilter}
+import java.io.File
 import java.nio.file.Path
 
 object TestResources {
 
     val ManifestFileName = "imsmanifest.xml"
 
-    private val BasePath       = "src/test/resources/"
-    private val ValidDirPath   = BasePath + "valid/directory/"
-    private val InvalidDirPath = BasePath + "invalid/directory/"
-    private val ValidZipPath   = BasePath + "valid/zip/"
-    private val InvalidZipPath = BasePath + "invalid/zip/"
-
     private val resourcesPath = new File("src/test/resources/").toPath
-    val validPath = resourcesPath.resolve("valid")
-    val invalidPath = resourcesPath.resolve("invalid")
+    private val validPath   = resourcesPath.resolve("valid")
+    private val invalidPath = resourcesPath.resolve("invalid")
 
-    val validDirectories: Seq[Path] = listSubDirectories(validPath.resolve("directory"))
-    val invalidDirectories: Seq[Path] = listSubDirectories(invalidPath.resolve("directory"))
+    private val validDirectories: Seq[Path] = listSubDirectories(validPath.resolve("directory"))
+    private val invalidDirectories: Seq[Path] = listSubDirectories(invalidPath.resolve("directory"))
 
-    val validManifest: Seq[File] = {
+    val validManifests: Seq[File] = {
         validDirectories.map(_.resolve("imsmanifest.xml").toFile)
     }
 
-    val invalidManifest: Seq[File] = {
+    val invalidManifests: Seq[File] = {
         invalidDirectories.map(_.resolve("imsmanifest.xml").toFile)
     }
 
@@ -37,15 +31,15 @@ object TestResources {
     }
 
     private def listSubDirectories(path: Path) = {
-        path.toFile.list(new FilenameFilter() {
-            def accept(current: File, name: String): Boolean = new File(current, name).isDirectory
-        }).map(path.resolve).toSeq
+        path.toFile
+            .list((current: File, name: String) => new File(current, name).isDirectory)
+            .map(path.resolve).toSeq
     }
 
     private def listFiles(path: Path) = {
-        path.toFile.list(new FilenameFilter() {
-            def accept(current: File, name: String): Boolean = new File(current, name).isFile
-        }).map(path.resolve).toSeq
+        path.toFile
+            .list((current: File, name: String) => new File(current, name).isFile)
+            .map(path.resolve).toSeq
     }
 
 }

@@ -6,6 +6,4 @@ abstract class BaseSpec extends FunSpec
     with Matchers
     with GivenWhenThen
     with BeforeAndAfterAll
-    with BeforeAndAfterEach {
-
-}
+    with BeforeAndAfterEach
