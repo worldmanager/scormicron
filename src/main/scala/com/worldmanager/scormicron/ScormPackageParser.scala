@@ -50,7 +50,7 @@ class ScormPackageParser(val manifest: File) {
 
     def parse: ScormPackage = {
         try {
-            val manifestType = JaxbUtils.unmarshal(manifest, classOf[ManifestType])
+            val manifestType = JaxbUtils.unmarshal[ManifestType](manifest)
 
             val organizationItem = manifestType.getOrganizations.getOrganization.asScala.headOption.flatMap(_.getItem.asScala.headOption)
 
@@ -86,7 +86,7 @@ class ScormPackageParser(val manifest: File) {
 
     private def getMetadatascheme(metadata: MetadataType): Option[ScormSchema] = {
         val contents = metadata.getAny.asScala.map(_.asInstanceOf[Node])
-            .map(node => JaxbUtils.unmarshal(node, classOf[LomType]))
+            .map(node => JaxbUtils.unmarshal[LomType](node))
             .flatMap(_.getMetametadata.getContent.asScala)
 
 
