@@ -3,7 +3,7 @@ package com.worldmanager.scormicron
 import java.io.File
 import java.nio.file.{Files, Path, Paths}
 
-import com.worldmanager.scormicron.manifest.v112.{ManifestType, MetadataType}
+import com.worldmanager.scormicron.manifest.v112.{ItemType, ManifestType, MetadataType}
 import com.worldmanager.scormicron.manifest.v121.LomType
 import javax.xml.bind.JAXBElement
 import net.lingala.zip4j.core.ZipFile
@@ -12,8 +12,9 @@ import org.w3c.dom.{Element, Node}
 import scala.collection.JavaConverters._
 
 object ScormPackageParser {
-    private final val ManifestFileName = "imsmanifest.xml"
-    private final val ScoreTagName  = "adlcp:masteryscore"
+    private final val ManifestFileName      = "imsmanifest.xml"
+    private final val ScoreTagName          = "adlcp:masteryscore"
+    private final val MetadataschemeTagName = "metadatascheme"
 
     @throws(classOf[IllegalArgumentException])
     @throws(classOf[ParseException])
@@ -54,8 +55,8 @@ class ScormPackageParser(val manifest: File) {
 
             val organizationItem = manifestType.getOrganizations.getOrganization.asScala.headOption.flatMap(_.getItem.asScala.headOption)
 
-            val entryPoint =  organizationItem.flatMap(item => manifestType.getResources.getResource.asScala.find(_.getIdentifier == item.getIdentifierref).map(_.getHref))
-            val score = organizationItem.flatMap(item => item.getAny.asScala.map(_.asInstanceOf[Element]).find(_.getTagName == ScormPackageParser.ScoreTagName).map(_.getFirstChild.getNodeValue))
+            val entryPoint = parseEntryPoint(manifestType, organizationItem.map(_.getIdentifierref))
+            val score = parseScore(organizationItem)
 
             val schema = parseSchema(manifestType: ManifestType)
 
@@ -67,9 +68,22 @@ class ScormPackageParser(val manifest: File) {
 
     }
 
+    private def parseEntryPoint(manifestType: ManifestType, identifierRef: Option[String]): Option[String] = {
+        identifierRef.flatMap(ref =>
+            manifestType.getResources.getResource.asScala
+                .find(_.getIdentifier == ref)
+                .map(_.getHref)
+        )
+    }
+
+    private def parseScore(organizationItem: Option[ItemType]): Option[String] = {
+        organizationItem
+            .flatMap(item => item.getAny.asScala.map(_.asInstanceOf[Element])
+            .find(_.getTagName == ScormPackageParser.ScoreTagName)
+            .map(_.getFirstChild.getNodeValue))
+    }
 
     private def parseSchema(manifestType: ManifestType): Option[ScormSchema] = {
-
         Option(manifestType.getMetadata) match {
             case None => None
             case Some(metadata) =>
@@ -78,22 +92,20 @@ class ScormPackageParser(val manifest: File) {
 
                 schemaVersion match {
                     case Some(version) => Some(ScormSchema(version, schema))
-                    case None => getMetadatascheme(metadata)
+                    case None => parseMetadatascheme(metadata)
                 }
         }
     }
 
-
-    private def getMetadatascheme(metadata: MetadataType): Option[ScormSchema] = {
+    private def parseMetadatascheme(metadata: MetadataType): Option[ScormSchema] = {
         val contents = metadata.getAny.asScala.map(_.asInstanceOf[Node])
-            .map(node => JaxbUtils.unmarshal[LomType](node))
+            .map(JaxbUtils.unmarshal[LomType])
             .flatMap(_.getMetametadata.getContent.asScala)
 
 
         val metadatascheme = contents
-            .filter(_.isInstanceOf[JAXBElement[_]])
-            .map(item => item.asInstanceOf[JAXBElement[_]])
-            .filter(_.getName.getLocalPart.equalsIgnoreCase("metadatascheme"))
+            .collect {case content if content.isInstanceOf[JAXBElement[_]] => content.asInstanceOf[JAXBElement[_]]}
+            .filter(_.getName.getLocalPart.equalsIgnoreCase(ScormPackageParser.MetadataschemeTagName))
             .map(_.getValue.toString.trim)
 
         metadatascheme.headOption.map(ScormSchema(_))
