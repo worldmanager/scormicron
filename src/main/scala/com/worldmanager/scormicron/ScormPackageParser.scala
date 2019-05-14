@@ -41,11 +41,11 @@ class ScormPackageParser(val manifest: File) {
     def this(path: Path) = this(path.resolve(ScormPackageParser.ManifestFileName).toFile)
 
     if (!manifest.exists) {
-        throw new ParseException("Manifest file '%s' not found".format(manifest))
+        throw ParseException("Manifest file '%s' not found".format(manifest))
     }
 
     if (manifest.getName != ScormPackageParser.ManifestFileName) {
-        throw new ParseException("Wrong manifest file name")
+        throw ParseException("Wrong manifest file name")
     }
 
     def parse: ScormPackage = {
