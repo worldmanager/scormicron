@@ -5,17 +5,17 @@ jaxb2 {
         'imsmd_rootv1p2p1' {
             generatedSourcesDir = 'build/generated/java'
             basePackage = 'com.worldmanager.scormicron.manifest.v121'
-            schema = 'src/main/xsd/scorm12schemadefinition_fixed/imsmd_rootv1p2p1.xsd'
+            schema = 'src/main/resources/scorm12schemadefinition/imsmd_rootv1p2p1.xsd'
         }
         'imscp_rootv1p1p2' {
             generatedSourcesDir = 'build/generated/java'
             basePackage = 'com.worldmanager.scormicron.manifest.v112'
-            schema = 'src/main/xsd/scorm12schemadefinition_fixed/imscp_rootv1p1p2.xsd'
+            schema = 'src/main/resources/scorm12schemadefinition/imscp_rootv1p1p2.xsd'
         }
         'adlcp_rootv1p2' {
             generatedSourcesDir = 'build/generated/java'
             basePackage = 'com.worldmanager.scormicron.manifest.v12'
-            schema = 'src/main/xsd/scorm12schemadefinition_fixed/adlcp_rootv1p2.xsd'
+            schema = 'src/main/resources/scorm12schemadefinition/adlcp_rootv1p2.xsd'
         }
     }
 }
