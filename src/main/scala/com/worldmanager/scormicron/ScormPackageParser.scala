@@ -3,7 +3,7 @@ package com.worldmanager.scormicron
 import java.io.File
 import java.nio.file.{Files, Path, Paths}
 
-import com.worldmanager.scormicron.manifest.v112.{ItemType, ManifestType, MetadataType}
+import com.worldmanager.scormicron.manifest.v112.{ItemType, ManifestType, MetadataType, OrganizationType}
 import com.worldmanager.scormicron.manifest.v121.LomType
 import javax.xml.bind.JAXBElement
 import net.lingala.zip4j.core.ZipFile
@@ -53,7 +53,7 @@ class ScormPackageParser(val manifest: File) {
         try {
             val manifestType = JaxbUtils.unmarshal[ManifestType](manifest)
 
-            val organizationItem = manifestType.getOrganizations.getOrganization.asScala.headOption.flatMap(_.getItem.asScala.headOption)
+            val organizationItem = parseOrganizationType(manifestType).flatMap(_.getItem.asScala.headOption)
 
             val entryPoint = parseEntryPoint(manifestType, organizationItem.map(_.getIdentifierref))
             val score = parseScore(organizationItem)
@@ -84,17 +84,23 @@ class ScormPackageParser(val manifest: File) {
     }
 
     private def parseSchema(manifestType: ManifestType): Option[ScormSchema] = {
-        Option(manifestType.getMetadata) match {
-            case None => None
-            case Some(metadata) =>
-                val schema = Option(metadata.getSchema).flatMap(schema => Option(schema.trim))
-                val schemaVersion = Option(metadata.getSchemaversion).flatMap(version => Option(version.trim))
-
-                schemaVersion match {
-                    case Some(version) => Some(ScormSchema(version, schema))
-                    case None => parseMetadatascheme(metadata)
-                }
+        val schema = Option(manifestType.getMetadata).flatMap { metadata =>
+            parseMetadataType(metadata).orElse(parseMetadatascheme(metadata))
         }
+
+        if (schema.isEmpty) parseSchemaFromOrganizations(manifestType)
+        else schema
+    }
+
+    private def parseSchemaFromOrganizations(manifestType: ManifestType): Option[ScormSchema] = {
+        parseOrganizationType(manifestType).map(_.getMetadata).flatMap(metadata => parseMetadataType(metadata))
+    }
+
+    private def parseMetadataType(metadata: MetadataType): Option[ScormSchema] = {
+        val schema = Option(metadata.getSchema).flatMap(schema => Option(schema.trim))
+        val schemaVersion = Option(metadata.getSchemaversion).flatMap(version => Option(version.trim))
+
+        schemaVersion.map(version => ScormSchema(version, schema))
     }
 
     private def parseMetadatascheme(metadata: MetadataType): Option[ScormSchema] = {
@@ -109,6 +115,10 @@ class ScormPackageParser(val manifest: File) {
             .map(_.getValue.toString.trim)
 
         metadatascheme.headOption.map(ScormSchema(_))
+    }
+
+    private def parseOrganizationType(manifestType: ManifestType): Option[OrganizationType] = {
+        manifestType.getOrganizations.getOrganization.asScala.headOption
     }
 
 }
