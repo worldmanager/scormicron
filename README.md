@@ -12,21 +12,21 @@ It contains 3 components
 
 `ManifestType` entities are Java JAXB entities built based on [XML Schema Definition Files](https://scorm.com/scorm-explained/technical-scorm/content-packaging/xml-schema-definition-files/).
 
-Unfortunately, [SCORM official XSD](https://21w98o3yqgi738kmv7xrf9lj-wpengine.netdna-ssl.com/wp-content/assets/SchemaDefinitionFiles/zips/scorm12schemadefinition.zip) can't be used by JAXB directly. Few modifications have been done to allow JAXB to build `ManifestType`, which are
+Unfortunately, [SCORM official XSD](https://21w98o3yqgi738kmv7xrf9lj-wpengine.netdna-ssl.com/wp-content/assets/SchemaDefinitionFiles/zips/scorm12schemadefinition.zip) can't be used by JAXB directly. A few modifications have been done to allow JAXB to build `ManifestType` entities. The modifications are:
 
-* In `ims_xml.xsd`, `xmlns="http://www.w3.org/XML/1998/namespace"` has been removed from `xsd:schema` tag.
-* In `adlcp_rootv1p2.xsd`, it is extended `imscp_rootv1p1p2.xsd` by overriding `schema` and `schemeversion`. JAX doesn't support the overriding. The changes are the merge `imscp_rootv1p1p2.xsd` into `adlcp_rootv1p2.xsd`.
+* In `ims_xml.xsd`, `xmlns="http://www.w3.org/XML/1998/namespace"` has been removed from the `xsd:schema` tag.
+* In `adlcp_rootv1p2.xsd`, it extends `imscp_rootv1p1p2.xsd` by overriding `schema` and `schemeversion`. JAX doesn't support the overriding. `imscp_rootv1p1p2.xsd` has been merged into `adlcp_rootv1p2.xsd` to work with JAXB.
 * In `imsmd_rootv1p2p1.xsd`, `namespace="##other"` has been replaced with `namespace="##any"` for the group type `<xsd:group name="grp.any">` as JAX doesn't work with `##other` namespace.   
 
-The adjusted XSD have been set at `src/main/resources` folder. They are used to build `ManifestType` and all its elements by a gradle JAXB plugin [com.ewerk.gradle.plugins.jaxb2](https://plugins.gradle.org/plugin/com.ewerk.gradle.plugins.jaxb2). 
+The altered XSDs are stored in the `src/main/resources` directory. They are used to build the `ManifestType` entities using a Gradle JAXB plugin [com.ewerk.gradle.plugins.jaxb2](https://plugins.gradle.org/plugin/com.ewerk.gradle.plugins.jaxb2). 
 
-**Note**: These generated code are not maintained by the project but are built in the jar library.
+**Note**: These generated code is not maintained by the project but instead generated at compile time and is built into the JAR. 
   
 ## `ScormPackageParser` Parser
 
 `ScormPackageParser` provides API to parse `imsmanifest.xml` into `ScormPackage`. 
 
-`ScormPackage` contains manifest type, scorm schema, entry point and master score.
+`ScormPackage` contains the manifest type, scorm schema, entry point and master score for the SCORM.
 
 ```
 case class ScormPackage
@@ -38,17 +38,17 @@ case class ScormPackage
 )
 ``` 
 
-The parse convert `imsmanifest.xml` to `ManifestType` first. Based on `ManifestType`, it collects scorm schema from following paths. 
+The parser converts `imsmanifest.xml` into a `ManifestType` first. Based on the `ManifestType`, it collects scorm schema from following paths: 
 
 * `manifest` -> `metadata` -> `schema`
 * `manifest` -> `metadata` -> `lom` -> `metametadata`
 * `manifest` -> `organizations` -> `organization` -> `metadata` -> `schema`
 
-Entry point is collected from path 
+Entry point is collected the from path: 
 
 * `manifest` -> `resources` -> `resources` -> `identifier` -> `href`
 
-Score is collected from path 
+Score is collected from path:
 
 * `manifest` -> `organizations` -> `organization` -> `items` -> `item` -> `adlcp:masteryscore`
 
@@ -69,10 +69,10 @@ val scormPackage: ScormPackage = new ScormPackageParser(ScormPackageParser.extra
  
 ## `ScormPackageValidator` Validator
  
-`ScormPackageValidator` validate schema and score. 
+`ScormPackageValidator` validates the schema and score. 
 
-* valid schema are `ADL SCORM 1.2` and `1.2`
-* valid score is integer between `0` and `100`
+* a valid schemas are `ADL SCORM 1.2` and `1.2`
+* a valid score is an integer between `0` and `100`
 
 ### Examples
 
