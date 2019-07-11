@@ -40,17 +40,17 @@ case class ScormPackage
 
 The parser converts `imsmanifest.xml` into a `ManifestType` first. Based on the `ManifestType`, it collects scorm schema from following paths: 
 
-* `manifest` -> `metadata` -> `schema`
-* `manifest` -> `metadata` -> `lom` -> `metametadata`
-* `manifest` -> `organizations` -> `organization` -> `metadata` -> `schema`
+* `manifest` → `metadata` → `schema`
+* `manifest` → `metadata` → `lom` → `metametadata`
+* `manifest` → `organizations` → `organization` → `metadata` → `schema`
 
 Entry point is collected the from path: 
 
-* `manifest` -> `resources` -> `resources` -> `identifier` -> `href`
+* `manifest` → `resources` → `resources` → `identifier` → `href`
 
 Score is collected from path:
 
-* `manifest` -> `organizations` -> `organization` -> `items` -> `item` -> `adlcp:masteryscore`
+* `manifest` → `organizations` → `organization` → `items` → `item` → `adlcp:masteryscore`
 
 
 ### Examples
