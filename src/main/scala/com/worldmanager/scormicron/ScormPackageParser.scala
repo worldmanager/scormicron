@@ -84,12 +84,9 @@ class ScormPackageParser(val manifest: File) {
     }
 
     private def parseSchema(manifestType: ManifestType): Option[ScormSchema] = {
-        val schema = Option(manifestType.getMetadata).flatMap { metadata =>
-            parseMetadataType(metadata).orElse(parseMetadatascheme(metadata))
-        }
-
-        if (schema.isEmpty) parseSchemaFromOrganizations(manifestType)
-        else schema
+        Option(manifestType.getMetadata)
+            .flatMap(metadata => parseMetadataType(metadata).orElse(parseMetadatascheme(metadata)))
+            .orElse(parseSchemaFromOrganizations(manifestType))
     }
 
     private def parseSchemaFromOrganizations(manifestType: ManifestType): Option[ScormSchema] = {
@@ -104,17 +101,13 @@ class ScormPackageParser(val manifest: File) {
     }
 
     private def parseMetadatascheme(metadata: MetadataType): Option[ScormSchema] = {
-        val contents = metadata.getAny.asScala.map(_.asInstanceOf[Node])
+        metadata.getAny.asScala.map(_.asInstanceOf[Node])
             .map(JaxbUtils.unmarshal[LomType])
             .flatMap(_.getMetametadata.getContent.asScala)
-
-
-        val metadatascheme = contents
-            .collect {case content if content.isInstanceOf[JAXBElement[_]] => content.asInstanceOf[JAXBElement[_]]}
-            .filter(_.getName.getLocalPart.equalsIgnoreCase(ScormPackageParser.MetadataschemeTagName))
-            .map(_.getValue.toString.trim)
-
-        metadatascheme.headOption.map(ScormSchema(_))
+            .collectFirst { case content: JAXBElement[_] if content.getName.getLocalPart.equalsIgnoreCase(ScormPackageParser.MetadataschemeTagName) =>
+                content.getValue.toString.trim
+            }
+            .map(ScormSchema(_))
     }
 
     private def parseOrganizationType(manifestType: ManifestType): Option[OrganizationType] = {
