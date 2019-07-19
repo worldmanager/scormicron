@@ -27,7 +27,7 @@ repositories {
 
 description 'Parser for SCORM 1.2 packages'
 group 'com.worldmanager'
-version '0.2.6'
+version '0.2.7'
 
 apply plugin: 'config'
 apply plugin: 'com.worldmanager.gradle'
