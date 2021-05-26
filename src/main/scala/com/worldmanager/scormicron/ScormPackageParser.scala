@@ -9,7 +9,7 @@ import javax.xml.bind.JAXBElement
 import net.lingala.zip4j.core.ZipFile
 import org.w3c.dom.{Element, Node}
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 object ScormPackageParser {
     private final val ManifestFileName      = "imsmanifest.xml"
