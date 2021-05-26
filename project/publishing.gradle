@@ -1,120 +1,92 @@
-apply plugin: 'signing'
-apply plugin: 'maven-publish'
-apply plugin: 'maven'
+import com.worldmanager.gradle.tasks.TagVersion
 
-/**
- * Create POM config and return for use by other tasks.
- */
-def getPomConfiguration() {
-    def repo = sprintf('%s/%s', project.ext.get('scm.username'), project.ext.get('scm.repo.name'))
-
-    return {
-        name project.name
-        version wm.utils.composeVersion()
-        description project.description
-        url sprintf(project.ext.get('scm.repo.url'), repo)
-        inceptionYear '2017'
-        packaging 'jar'
-        licenses {
-            license {
-                name project.ext.get('license.name')
-                url project.ext.get('license.url')
-                distribution 'repo'
-            }
-        }
-        scm {
-            url sprintf(project.ext.get('scm.repo.url'), repo)
-            connection 'scm:git:' + sprintf(project.ext.get('scm.remote.url.fetch'), repo)
-            developerConnection 'scm:git:' + sprintf(project.ext.get('scm.remote.url.push'), repo)
-        }
-        developers {
-            developer {
-                id 'worldmanager'
-                name 'World Manager'
-                email 'support@worldmanager.com'
-            }
-        }
-        organization {
-            name 'World Manager'
-        }
+buildscript {
+    repositories {
+        // mavenLocal() // for testing only
+        // mavenCentral() // for testing only
+        maven { url project.ext.get('mvn.repos.redlounge.url') }
+        maven { url project.ext.get('mvn.repos.thirdparty.url') }
+    }
+    dependencies {
+        classpath group: 'com.esyfur',       name: 'gradle-config-plugin', version: project.ext.get('plugin.config.version')
+        classpath group: 'com.worldmanager', name: 'gradle-wm-plugin',     version: project.ext.get('plugin.wm.version')
     }
 }
 
-artifacts {
-    archives jar
-    archives sourceJar
-    archives javadocJar
-}
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+
+def repoName = project.ext.get('scm.repo.name')
+def repoUrl = wm.utils.isSnapshot() ? project.ext.get('publish.repos.snapshots.url') : project.ext.get('publish.repos.releases.url')
 
 publishing {
     publications {
         main(MavenPublication) {
+            // Only the fat JAR needs to be published
             from components.java
 
-            artifact source: sourceJar,  classifier: 'sources'
-            artifact source: javadocJar, classifier: 'javadoc'
+            version = wm.utils.composeVersion()
 
-            pom.withXml {
-                asNode().children().last() + getPomConfiguration()
+            pom {
+                name = project.name
+                description = project.description
+                url = repoUrl
+                inceptionYear = '2019'
+                packaging = 'jar'
+                licenses {
+                    license {
+                        name = project.ext.get('license.name')
+                        url = project.ext.get('license.url')
+                    }
+                }
+                scm {
+                    url = repoUrl
+                    connection = 'scm:git:' + sprintf(project.ext.get('scm.remote.url.fetch'), repoName)
+                    developerConnection = 'scm:git:' + sprintf(project.ext.get('scm.remote.url.push'), repoName)
+                }
+                developers {
+                    developer {
+                        id = 'worldmanager'
+                        name = 'World Manager IQ Division'
+                        email = 'support@worldmanager.com'
+                    }
+                }
+                organization {
+                    name = 'World Manager'
+                }
             }
         }
     }
+
     repositories {
-        // mavenLocal()
-        if (project.ext.has('publish.repos.releases.url')) {
-            maven {
-                url wm.utils.isSnapshot() ? project.ext.get('publish.repos.snapshots.url') : project.ext.get('publish.repos.releases.url')
-                credentials {
-                    username project.ext.get('publish.credentials.username')
-                    password project.ext.get('publish.credentials.password')
-                }
+        maven {
+            name = "io.redlounge.hackwrench"
+            url = repoUrl
+            credentials {
+                username = project.ext.get('publish.credentials.username')
+                password = project.ext.get('publish.credentials.password')
             }
         }
     }
 }
 
 signing {
-    sign configurations.archives
-    required { !wm.utils.isSnapshot() && gradle.taskGraph.hasTask("publish") }
+    sign publishing.publications.main
+    required { !wm.utils.isSnapshot() && false }
 }
 
-uploadArchives {
-    repositories.mavenDeployer {
-        if (project.ext.has('publish.repos.releases.url')) {
-            def repoUrl = wm.utils.isSnapshot() ? project.ext.get('publish.repos.snapshots.url') : project.ext.get('publish.repos.releases.url')
-
-            repository(url: repoUrl) {
-                authentication(
-                    userName: project.ext.get('publish.credentials.username'),
-                    password: project.ext.get('publish.credentials.password')
-                )
-            }
-        }
-        pom.project getPomConfiguration()
-        beforeDeployment { signing.signPom it }
-    }
-}
-
-install.repositories.mavenInstaller {
-    pom.project getPomConfiguration()
-}
-
-task pom {
-    doLast {
-        pom {
-            project getPomConfiguration()
-        }.writeTo(mavenPomDir.toString() + '/pom.xml')
-    }
-}
-
-task upload {
-    group 'Publishing'
-    dependsOn uploadArchives
-}
+task tagVersion(type: TagVersion)
 
 task release {
     group 'Publishing'
-    dependsOn ':tagVersion', uploadArchives /*, publish */
+    dependsOn tagVersion, publish
 }
 
-tasks.publish.mustRunAfter ':tagVersion'
+tasks.publish.mustRunAfter tagVersion
+
+// TODO the upload will be removed when teamcity building step is updated to use `publish` task
+task upload {
+    group 'Publishing'
+    dependsOn publish
+}

@@ -11,8 +11,8 @@ buildscript {
 }
 
 plugins {
-    id 'com.ewerk.gradle.plugins.jaxb2' version '1.0.9' apply false
-    id 'com.github.maiflai.scalatest'   version '0.25'  apply false
+    id 'com.ewerk.gradle.plugins.jaxb2' version '1.0.10' apply false
+    id 'com.github.maiflai.scalatest'   version '0.31'  apply false
     id 'org.ajoberstar.grgit'           version '3.1.1' apply true
 }
 
@@ -40,12 +40,6 @@ apply from: 'project/publishing.gradle'
 apply from: 'project/tests.gradle'
 apply from: 'project/ide.gradle'
 
-wrapper {
-    group = 'init'
-    gradleVersion = '5.4.1'
-    distributionType Wrapper.DistributionType.BIN
-}
 
 wm.utils.assertGradleVersion()
 
-task tagVersion(type: TagVersion)

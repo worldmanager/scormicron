@@ -1,13 +1,19 @@
 apply plugin: 'com.github.maiflai.scalatest'
 
 dependencies {
-    testImplementation('io.codearte.jfairy:jfairy:0.5.9')
+    testImplementation group: 'org.scalactic', name: sclArt('scalactic'), version: project.ext.get('scalactic.version')
+    testImplementation group: 'org.scalatest', name: sclArt('scalatest'), version: project.ext.get('scalatest.version')
+    testImplementation group: 'org.scalatestplus', name: sclArt('mockito-3-4'), version: project.ext.get('scalatestplus-mockito.version')
 
-    testImplementation group: 'org.scalactic', name: sclArt('scalactic'), version: '3.0.7'
-    testImplementation group: 'org.scalatest', name: sclArt('scalatest'), version: '3.0.7'
+    // required by the scalatest gradle plugin
+    // Please do not upgrade these versions unless scalatest update the version see https://github.com/scalatest/scalatest/issues/1736
+    testRuntimeOnly group: 'com.vladsch.flexmark', name: 'flexmark-all', version: project.ext.get('flexmark.scalatestVersion')
 
-    testRuntime group: 'org.pegdown',   name: 'pegdown',           version: '1.6.0'
-    testRuntime group: 'org.parboiled', name: 'parboiled-java',    version: '1.3.0'
+    testImplementation group: 'org.hamcrest', name: 'hamcrest-all', version: project.ext.get('hamcrest.version')
+    testImplementation (group: 'org.mockito',  name: 'mockito-core',  version: project.ext.get('mockito.version'))
+//    testImplementation (group: 'org.mockito',  name: 'mockito-core',  version: project.ext.get('mockito.version')) {
+//        testRuntimeOnly group: 'net.bytebuddy',  name: 'byte-buddy',  version: project.ext.get('bytebuddy.version')
+//    }
 
 }
 
